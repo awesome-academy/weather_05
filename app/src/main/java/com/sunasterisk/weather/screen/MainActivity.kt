@@ -1,8 +1,8 @@
-package com.sunasterisk.weather
+package com.sunasterisk.weather.screen
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.sun.weather.R
+import com.sunasterisk.weather.R
 
 class MainActivity : AppCompatActivity() {
 
