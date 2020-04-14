@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textHumidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/humidity_label"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_25"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/progressBarHumidity"
+        app:layout_constraintStart_toStartOf="@+id/progressBarHumidity"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBarHumidity"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_50"
+        android:layout_marginEnd="@dimen/dp_30"
+        android:max="100"
+        android:progress="30"
+        app:layout_constraintEnd_toStartOf="@+id/textWindSpeed"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textHumidity" />
+
+    <TextView
+        android:id="@+id/textPercentHumidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/percent_element"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toEndOf="@+id/progressBarHumidity"
+        app:layout_constraintStart_toStartOf="@+id/progressBarHumidity"
+        app:layout_constraintTop_toBottomOf="@+id/progressBarHumidity" />
+
+    <TextView
+        android:id="@+id/textWind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/wind_label"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_25"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textWindSpeed"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textWindDirection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wind_direction_label"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintStart_toStartOf="@+id/textWindSpeed"
+        app:layout_constraintTop_toBottomOf="@+id/textWind" />
+
+    <TextView
+        android:id="@+id/textWindDirectionValue"
+        android:layout_marginStart="@dimen/dp_5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/wind_direction_value_default"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textWindDirection"
+        app:layout_constraintTop_toBottomOf="@+id/textWind" />
+
+    <TextView
+        android:id="@+id/textWindSpeed"
+        android:layout_marginEnd="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:text="@string/wind_speed_label"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toStartOf="@+id/textWindSpeedValue"
+        app:layout_constraintTop_toBottomOf="@+id/textWindDirection" />
+
+    <TextView
+        android:id="@+id/textWindSpeedValue"
+        android:layout_marginEnd="@dimen/dp_5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:gravity="start"
+        android:text="@string/wind_speed_value_default"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toStartOf="@+id/textWindSpeedUnit"
+        app:layout_constraintTop_toBottomOf="@+id/textWindDirection" />
+
+    <TextView
+        android:id="@+id/textWindSpeedUnit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:gravity="start"
+        android:text="@string/wind_speed_unit_default"
+        android:textColor="@color/colorGray"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textWindDirection" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

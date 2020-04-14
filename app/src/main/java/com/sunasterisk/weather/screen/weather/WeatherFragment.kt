@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.sunasterisk.weather.R
 
 class WeatherFragment : Fragment() {
@@ -14,7 +13,18 @@ class WeatherFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        initView()
+        initData()
         return inflater.inflate(R.layout.fragment_weather, container, false)
+    }
+
+    private fun initView() {
+        // TODO UPDATE RECYCLER VIEW DAILY, HOURLY
+    }
+
+    private fun initData() {}
+
+    companion object {
+        fun newInstance() = WeatherFragment()
     }
 }
