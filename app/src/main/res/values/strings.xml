@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Weather</string>
+    <string name="temperature_element">Temperature</string>
+    <string name="temperature_min_max_element">Temperature Min / Temperature Max</string>
+    <string name="summary_element">Summary</string>
+    <string name="location_element">Location</string>
+    <string name="update_weather_element">Last Update</string>
+    <string name="humidity_label">Humidity</string>
+    <string name="wind_label">Wind</string>
+    <string name="wind_direction_label">Wind Direction:</string>
+    <string name="wind_speed_label">Wind Speed:</string>
+    <string name="percent_element">Percent</string>
+    <string name="time_element">Time</string>
+    <string name="wind_direction_value_default">North</string>
+    <string name="wind_speed_value_default">15 m/s</string>
+    <string name="wind_speed_unit_default">- km/s</string>
 </resources>

@@ -57,7 +57,7 @@ class ParseDataWithJson {
                                 weatherDataJson.getDouble(WeatherStatisticsEntry.TEMPERATURE_MAX),
                                 null,
                                 null)
-                        weatherData?.let { dataWeatherList.add(it) }
+                        dataWeatherList.add(weatherData)
                     }
                 }
                 WeatherEntry.HOURLY_OBJECT -> {
@@ -72,7 +72,7 @@ class ParseDataWithJson {
                             null,
                             null,
                             null)
-                        weatherData?.let { dataWeatherList.add(it) }
+                        dataWeatherList.add(weatherData)
                     }
                 }
             }
@@ -99,8 +99,7 @@ class ParseDataWithJson {
                     dailyWeather?.get(0)?.temperatureMax,
                     jsonObjectCurrent.getDouble(WeatherStatisticsEntry.HUMIDITY),
                     Wind(jsonObjectCurrent.getInt(WindEntry.WIND_DIRECTION),
-                         jsonObjectCurrent.getDouble(WindEntry.WIND_SPEED),
-                         "m/s"))
+                         jsonObjectCurrent.getDouble(WindEntry.WIND_SPEED)))
         } catch (e: JSONException) {
             e.printStackTrace()
         }

@@ -6,8 +6,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Wind(
     val windDirection: Int? = 0,
-    val windSpeed: Double? = 0.0,
-    val unit: String? = ""
+    val windSpeed: Double? = 0.0
 ) : Parcelable
 
 object WindEntry {

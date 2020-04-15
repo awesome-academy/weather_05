@@ -1,11 +1,13 @@
 package com.sunasterisk.weather.data.source
 
+import com.sunasterisk.weather.data.model.Weather
 import com.sunasterisk.weather.data.source.local.WeatherLocalDataSource
+import com.sunasterisk.weather.data.source.remote.OnFetchDataJsonListener
 import com.sunasterisk.weather.data.source.remote.WeatherRemoteDataSource
 
 class WeatherRepository private constructor(
-    localDataSource: WeatherLocalDataSource,
-    remoteDataSource: WeatherRemoteDataSource
+    private val localDataSource: WeatherLocalDataSource,
+    private val remoteDataSource: WeatherRemoteDataSource
 ) : WeatherDataSource.Local, WeatherDataSource.Remote {
 
     private object HOLDER {
@@ -15,5 +17,13 @@ class WeatherRepository private constructor(
 
     companion object {
         val instance: WeatherRepository by lazy { HOLDER.INSTANCE }
+    }
+
+    override fun getWeather(
+        latitude: Double,
+        longitude: Double,
+        listener: OnFetchDataJsonListener<Weather>
+    ) {
+        remoteDataSource.getWeather(latitude, longitude, listener)
     }
 }
