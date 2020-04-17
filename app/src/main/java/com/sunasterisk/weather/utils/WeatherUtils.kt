@@ -64,9 +64,9 @@ object WeatherUtils {
     fun formatTime(data: Long, tagObject: String): String {
         return when(tagObject) {
             WeatherEntry.HOURLY_OBJECT -> {
-                SimpleDateFormat(Constant.FORMAT_TIME_HOURLY).format(data)
+                SimpleDateFormat(Constant.FORMAT_TIME_HOURLY).format(data * 1000)
             }
-            else -> SimpleDateFormat(Constant.FORMAT_TIME_DAILY).format(data)
+            else -> SimpleDateFormat(Constant.FORMAT_TIME_DAILY).format(data * 1000)
         }
     }
 }
