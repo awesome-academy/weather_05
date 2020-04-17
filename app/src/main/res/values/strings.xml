@@ -14,4 +14,5 @@
     <string name="wind_direction_value_default">North</string>
     <string name="wind_speed_value_default">15 m/s</string>
     <string name="wind_speed_unit_default">- km/s</string>
+    <string name="message_turn_on_location">"Turn on location"</string>
 </resources>
