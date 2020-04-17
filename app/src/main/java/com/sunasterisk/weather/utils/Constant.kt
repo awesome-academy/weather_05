@@ -9,7 +9,6 @@ object Constant {
     const val LATITUDE_KEY = "LATITUDE"
     const val LONGITUDE_KEY = "LONGITUDE"
     const val FORMAT_PERCENT = "%.0f%%"
-    const val FORMAT_TIME_HOURLY = "hh:00"
+    const val FORMAT_TIME_HOURLY = "HH:00"
     const val FORMAT_TIME_DAILY = "EEE, MMM dd, yyyy"
-
 }

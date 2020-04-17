@@ -17,10 +17,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
+        android:id="@+id/body"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        layout="@layout/layout_body_weather"
+        app:layout_constraintBottom_toTopOf="@+id/footer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+    <include
         android:id="@+id/footer"
-        layout="@layout/layout_footer_weather"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        layout="@layout/layout_footer_weather"
         android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <View
+        android:id="@+id/separateFooter"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/colorLightGray"
+        android:layout_marginBottom="@dimen/dp_10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
         android:id="@+id/textHumidity"
         android:layout_width="wrap_content"
@@ -14,18 +24,21 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_25"
         android:textStyle="bold"
+        android:layout_marginTop="@dimen/dp_10"
         app:layout_constraintEnd_toEndOf="@+id/progressBarHumidity"
         app:layout_constraintStart_toStartOf="@+id/progressBarHumidity"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/separateFooter" />
 
     <ProgressBar
         android:id="@+id/progressBarHumidity"
-        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="@dimen/dp_50"
-        android:layout_marginEnd="@dimen/dp_30"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/custom_progressbar"
         android:max="100"
         android:progress="30"
+        android:layout_marginEnd="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_5"
         app:layout_constraintEnd_toStartOf="@+id/textWindSpeed"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,9 +65,10 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_25"
         android:textStyle="bold"
+        android:layout_marginTop="@dimen/dp_10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textWindSpeed"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/separateFooter" />
 
     <TextView
         android:id="@+id/textWindDirection"
@@ -68,22 +82,22 @@
 
     <TextView
         android:id="@+id/textWindDirectionValue"
-        android:layout_marginStart="@dimen/dp_5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/wind_direction_value_default"
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_18"
+        android:layout_marginStart="@dimen/dp_5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textWindDirection"
         app:layout_constraintTop_toBottomOf="@+id/textWind" />
 
     <TextView
         android:id="@+id/textWindSpeed"
-        android:layout_marginEnd="@dimen/dp_5"
-        android:layout_marginTop="@dimen/dp_10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
         android:gravity="start"
         android:text="@string/wind_speed_label"
         android:textColor="@android:color/white"
@@ -93,14 +107,13 @@
 
     <TextView
         android:id="@+id/textWindSpeedValue"
-        android:layout_marginEnd="@dimen/dp_5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
         android:gravity="start"
         android:text="@string/wind_speed_value_default"
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_18"
+        android:layout_marginTop="@dimen/dp_10"
         app:layout_constraintEnd_toStartOf="@+id/textWindSpeedUnit"
         app:layout_constraintTop_toBottomOf="@+id/textWindDirection" />
 
@@ -108,11 +121,11 @@
         android:id="@+id/textWindSpeedUnit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
         android:gravity="start"
         android:text="@string/wind_speed_unit_default"
         android:textColor="@color/colorGray"
         android:textSize="@dimen/sp_18"
+        android:layout_marginTop="@dimen/dp_10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textWindDirection" />
 

@@ -2,14 +2,17 @@ package com.sunasterisk.weather.screen
 
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.sunasterisk.weather.R
+import com.sunasterisk.weather.screen.cities.CitiesFragment
 import com.sunasterisk.weather.screen.weather.WeatherFragment
 import com.sunasterisk.weather.utils.*
 import com.sunasterisk.weather.utils.listener.OnFetchLocation
 
 class MainActivity : AppCompatActivity(), OnFetchLocation {
     private var location: Location? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
