@@ -15,4 +15,6 @@
     <string name="wind_speed_value_default">15 m/s</string>
     <string name="wind_speed_unit_default">- km/s</string>
     <string name="message_turn_on_location">"Turn on location"</string>
+    <string name="message_update_data">Last updated:</string>
+    <string name="title_cities_manager">Cities Manager</string>
 </resources>
