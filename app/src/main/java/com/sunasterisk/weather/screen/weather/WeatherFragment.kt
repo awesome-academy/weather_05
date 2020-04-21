@@ -9,11 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import kotlin.math.roundToInt
 import com.sunasterisk.weather.R
 import com.sunasterisk.weather.data.model.Weather
 import com.sunasterisk.weather.data.model.WeatherEntry
 import com.sunasterisk.weather.data.model.entity.WeatherStatistics
 import com.sunasterisk.weather.data.source.WeatherRepository
+import com.sunasterisk.weather.data.source.local.database.DBHelper
 import com.sunasterisk.weather.screen.adapter.WeatherAdapter
 import com.sunasterisk.weather.screen.cities.CitiesFragment
 import com.sunasterisk.weather.utils.*
@@ -22,7 +24,6 @@ import kotlinx.android.synthetic.main.layout_body_weather.*
 import kotlinx.android.synthetic.main.layout_footer_weather.*
 import kotlinx.android.synthetic.main.layout_header_weather.*
 import java.util.*
-import kotlin.math.roundToInt
 
 class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
     SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
@@ -96,7 +97,7 @@ class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
             activity?.let {
                 (it as AppCompatActivity).addFragmentToActivity(
                     it.supportFragmentManager,
-                    CitiesFragment.newInstance(latitude, longitude),
+                    CitiesFragment.newInstance(),
                     R.id.container)
             }
         }

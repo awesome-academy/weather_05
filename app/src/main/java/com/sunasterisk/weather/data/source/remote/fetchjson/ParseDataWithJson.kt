@@ -48,31 +48,17 @@ class ParseDataWithJson {
                 WeatherEntry.DAILY_OBJECT -> {
                     for (i in 0 until jsonArray.length()) {
                         val weatherDataJson = jsonArray.getJSONObject(i)
-                        val weatherData =
-                            WeatherStatistics(weatherDataJson.getLong(WeatherStatisticsEntry.TIME),
-                                null,
-                                weatherDataJson.getString(WeatherStatisticsEntry.ICON),
-                                null,
-                                weatherDataJson.getDouble(WeatherStatisticsEntry.TEMPERATURE_MIN),
-                                weatherDataJson.getDouble(WeatherStatisticsEntry.TEMPERATURE_MAX),
-                                null,
-                                null)
-                        dataWeatherList.add(weatherData)
+                        dataWeatherList.add(
+                            parseJsonElementWeather(weatherDataJson, WeatherEntry.DAILY_OBJECT)
+                        )
                     }
                 }
                 WeatherEntry.HOURLY_OBJECT -> {
                     for (i in 0 until jsonArray.length()) {
                     val weatherDataJson = jsonArray.getJSONObject(i)
-                    val weatherData =
-                        WeatherStatistics(weatherDataJson.getLong(WeatherStatisticsEntry.TIME),
-                            null,
-                            weatherDataJson.getString(WeatherStatisticsEntry.ICON),
-                            weatherDataJson.getDouble(WeatherStatisticsEntry.TEMPERATURE),
-                            null,
-                            null,
-                            null,
-                            null)
-                        dataWeatherList.add(weatherData)
+                        dataWeatherList.add(
+                            parseJsonElementWeather(weatherDataJson, WeatherEntry.HOURLY_OBJECT)
+                        )
                     }
                 }
             }
@@ -83,27 +69,69 @@ class ParseDataWithJson {
         return dataWeatherList
     }
 
-    private fun parseJsonToObject(jsonObject: JSONObject): WeatherStatistics? {
-        var weatherStatistics: WeatherStatistics? = null
-        val dailyWeather =
-            parseJsonToDataWeather(jsonObject.getJSONObject(WeatherEntry.DAILY_OBJECT),
-                                    WeatherEntry.DAILY_OBJECT)
+    fun parseJsonElementWeather(jsonObject: JSONObject, tagObject: String): WeatherStatistics {
+        return when(tagObject) {
+            WeatherEntry.DAILY_OBJECT -> {
+                 WeatherStatistics(jsonObject.getLong(WeatherStatisticsEntry.TIME),
+                    null,
+                    jsonObject.getString(WeatherStatisticsEntry.ICON),
+                    null,
+                    jsonObject.getDouble(WeatherStatisticsEntry.TEMPERATURE_MIN),
+                    jsonObject.getDouble(WeatherStatisticsEntry.TEMPERATURE_MAX),
+                    null,
+                    null)
+            } else -> {
+                WeatherStatistics(jsonObject.getLong(WeatherStatisticsEntry.TIME),
+                    null,
+                    jsonObject.getString(WeatherStatisticsEntry.ICON),
+                    jsonObject.getDouble(WeatherStatisticsEntry.TEMPERATURE),
+                    null,
+                    null,
+                    null,
+                    null)
+            }
+        }
+    }
+
+    private fun parseJsonToCurrent(
+        jsonObject: JSONObject,
+        temperatureMin: Double?,
+        temperatureMax: Double?
+    ): WeatherStatistics? {
         val jsonObjectCurrent = jsonObject.getJSONObject(WeatherEntry.CURRENTLY_OBJECT)
+        return parseJsonToObject(jsonObjectCurrent, temperatureMin, temperatureMax)
+    }
+
+    fun parseJsonToObject(
+        jsonObject: JSONObject,
+        temperatureMin: Double?, temperatureMax: Double?): WeatherStatistics? {
         try {
-            weatherStatistics =
-                WeatherStatistics(jsonObjectCurrent.getLong(WeatherStatisticsEntry.TIME),
-                    jsonObjectCurrent.getString(WeatherStatisticsEntry.SUMMARY),
-                    jsonObjectCurrent.getString(WeatherStatisticsEntry.ICON),
-                    jsonObjectCurrent.getDouble(WeatherStatisticsEntry.TEMPERATURE),
-                    dailyWeather?.get(0)?.temperatureMin,
-                    dailyWeather?.get(0)?.temperatureMax,
-                    jsonObjectCurrent.getDouble(WeatherStatisticsEntry.HUMIDITY),
-                    Wind(jsonObjectCurrent.getInt(WindEntry.WIND_DIRECTION),
-                         jsonObjectCurrent.getDouble(WindEntry.WIND_SPEED)))
+            return WeatherStatistics(jsonObject.getLong(WeatherStatisticsEntry.TIME),
+                jsonObject.getString(WeatherStatisticsEntry.SUMMARY),
+                jsonObject.getString(WeatherStatisticsEntry.ICON),
+                jsonObject.getDouble(WeatherStatisticsEntry.TEMPERATURE),
+                temperatureMin, temperatureMax,
+                jsonObject.getDouble(WeatherStatisticsEntry.HUMIDITY),
+                Wind(jsonObject.getInt(WindEntry.WIND_DIRECTION),
+                    jsonObject.getDouble(WindEntry.WIND_SPEED)))
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return weatherStatistics
+        return null
+    }
+
+    private fun getMinMaxTemperature(jsonObject: JSONObject): HashMap<String, Double> {
+        val dailyWeather =
+            parseJsonToDataWeather(jsonObject.getJSONObject(WeatherEntry.DAILY_OBJECT),
+                WeatherEntry.DAILY_OBJECT)
+        val hashMap = HashMap<String, Double>()
+        val temperatureMin = dailyWeather?.get(0)?.temperatureMin ?: 0.0
+        val temperatureMax = dailyWeather?.get(0)?.temperatureMin ?: 0.0
+        hashMap.apply {
+            put(WeatherStatisticsEntry.TEMPERATURE_MIN, temperatureMin)
+            put(WeatherStatisticsEntry.TEMPERATURE_MAX, temperatureMax)
+        }
+        return hashMap
     }
 
     fun parseJsonToWeather(jsonObject: JSONObject): Weather? {
@@ -111,17 +139,18 @@ class ParseDataWithJson {
         try {
             val dailyWeatherList =
                 parseJsonToDataWeather(jsonObject.getJSONObject(WeatherEntry.DAILY_OBJECT),
-                                        WeatherEntry.DAILY_OBJECT)
+                    WeatherEntry.DAILY_OBJECT)
             val hourlyWeatherList =
                 parseJsonToDataWeather(jsonObject.getJSONObject(WeatherEntry.HOURLY_OBJECT),
                     WeatherEntry.HOURLY_OBJECT)
-            weather =
-                Weather(jsonObject.getDouble(WeatherEntry.LATITUDE),
-                        jsonObject.getDouble(WeatherEntry.LONGITUDE),
-                        jsonObject.getString(WeatherEntry.TIMEZONE),
-                        parseJsonToObject(jsonObject),
-                        hourlyWeatherList,
-                        dailyWeatherList)
+            weather = Weather(jsonObject.getDouble(WeatherEntry.LATITUDE),
+                    jsonObject.getDouble(WeatherEntry.LONGITUDE),
+                    jsonObject.getString(WeatherEntry.TIMEZONE),
+                    parseJsonToCurrent(jsonObject,
+                        getMinMaxTemperature(jsonObject)[WeatherStatisticsEntry.TEMPERATURE_MIN],
+                        getMinMaxTemperature(jsonObject)[WeatherStatisticsEntry.TEMPERATURE_MAX]),
+                    hourlyWeatherList,
+                    dailyWeatherList)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
