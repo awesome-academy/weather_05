@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.sunasterisk.weather.R
 import kotlinx.android.synthetic.main.fragment_cities.*
-import com.sunasterisk.weather.utils.setupToolbar
 
-class CitiesFragment private constructor(): Fragment(), View.OnClickListener{
+class CitiesFragment private constructor(): Fragment(), View.OnClickListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,8 +24,7 @@ class CitiesFragment private constructor(): Fragment(), View.OnClickListener{
     }
 
     private fun initView() {
-        (activity as? AppCompatActivity)?.setupToolbar(
-            toolbarCities, getString(R.string.title_cities_manager))
+        toolbarCities.title = getString(R.string.title_cities_manager)
         toolbarCities.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         toolbarCities.setNavigationOnClickListener(this)
     }

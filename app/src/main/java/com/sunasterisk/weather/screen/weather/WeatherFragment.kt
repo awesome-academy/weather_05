@@ -15,7 +15,6 @@ import com.sunasterisk.weather.data.model.Weather
 import com.sunasterisk.weather.data.model.WeatherEntry
 import com.sunasterisk.weather.data.model.entity.WeatherStatistics
 import com.sunasterisk.weather.data.source.WeatherRepository
-import com.sunasterisk.weather.data.source.local.database.DBHelper
 import com.sunasterisk.weather.screen.adapter.WeatherAdapter
 import com.sunasterisk.weather.screen.cities.CitiesFragment
 import com.sunasterisk.weather.utils.*
@@ -23,7 +22,6 @@ import kotlinx.android.synthetic.main.fragment_weather.*
 import kotlinx.android.synthetic.main.layout_body_weather.*
 import kotlinx.android.synthetic.main.layout_footer_weather.*
 import kotlinx.android.synthetic.main.layout_header_weather.*
-import java.util.*
 
 class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
     SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
@@ -46,6 +44,7 @@ class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
     private val sharedPreferences by lazy {
         context?.getSharedPreferences(Constant.PREF_SPEED_AND_TEMPERATURE_UNIT, MODE_PRIVATE)
     }
+
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
     private var speedUnit: String? = null
@@ -114,39 +113,43 @@ class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
     }
 
     override fun onGetCurrentWeatherSuccess(weather: Weather) {
-        textTimeUpdate.text =
-            WeatherUtils.formatTime(context, Date().time, Constant.TAG_LAST_UPDATE)
         progressBarHumidity.max = 100
         textLocation.text = WeatherUtils.formatNameLocation(context, latitude, longitude)
-        weather.weatherHourlyList?.let {
-            hourlyAdapter.updateData(it as MutableList<WeatherStatistics>, TemperatureUnit.CELSIUS)
-        }
-        weather.weatherDailyList?.let {
-            dailyAdapter.updateData(it as MutableList<WeatherStatistics>, TemperatureUnit.CELSIUS)
-        }
-        weather.weatherCurrent?.let {
-            textSummary.text = it.summary
-            textTemperature.text = WeatherUtils.formatTemperature(
-                getTemperature(it.temperature, TemperatureUnit.CELSIUS))
-            textMinMaxTemperature.text = WeatherUtils.formatTemperature(
+        weather.apply {
+            weatherHourlyList?.let {
+                hourlyAdapter.updateData(it as MutableList<WeatherStatistics>, TemperatureUnit.CELSIUS)
+            }
+            weatherDailyList?.let {
+                dailyAdapter.updateData(it as MutableList<WeatherStatistics>, TemperatureUnit.CELSIUS)
+            }
+            weatherCurrent?.let {
+                it.time?.let { time ->
+                    textTimeUpdate.text =
+                        WeatherUtils.formatTime(context, time, Constant.TAG_LAST_UPDATE)
+                }
+                textSummary.text = it.summary
+                textTemperature.text = WeatherUtils.formatTemperature(
+                    getTemperature(it.temperature, TemperatureUnit.CELSIUS))
+                textMinMaxTemperature.text = WeatherUtils.formatTemperature(
                     getTemperature(it.temperatureMin, TemperatureUnit.CELSIUS),
                     getTemperature(it.temperatureMax, TemperatureUnit.CELSIUS))
-            it.wind?.let { wind ->
-                textWindDirectionValue.text = wind.windDirection?.let { windDirection ->
-                    WeatherUtils.formatWindDirection(windDirection)
-                }
-                textWindSpeedValue.text = wind.windSpeed?.let { windSpeed ->
-                    speedValue = windSpeed
-                    speedUnit?.let { unit ->
-                        speedUnit = WeatherUtils.changeSpeedUnit(unit)
-                        WeatherUtils.formatWindSpeed(windSpeed, unit)
+                it.wind?.let { wind ->
+                    textWindDirectionValue.text = wind.windDirection?.let { windDirection ->
+                        WeatherUtils.formatWindDirection(windDirection)
+                    }
+                    textWindSpeedValue.text = wind.windSpeed?.let { windSpeed ->
+                        speedValue = windSpeed
+                        speedUnit?.let { unit ->
+                            speedUnit = WeatherUtils.changeSpeedUnit(unit)
+                            WeatherUtils.formatWindSpeed(windSpeed, unit)
+                        }
                     }
                 }
-            }
-            textWindSpeedUnit.text = StringBuilder(" - ").append(speedUnit)
-            it.humidity?.let { humidity ->
-                progressBarHumidity.progress = humidity.times(100).roundToInt()
-                textPercentHumidity.text = WeatherUtils.formatHumidity(humidity)
+                textWindSpeedUnit.text = StringBuilder(" - ").append(speedUnit)
+                it.humidity?.let { humidity ->
+                    progressBarHumidity.progress = humidity.times(100).roundToInt()
+                    textPercentHumidity.text = WeatherUtils.formatHumidity(humidity)
+                }
             }
         }
     }

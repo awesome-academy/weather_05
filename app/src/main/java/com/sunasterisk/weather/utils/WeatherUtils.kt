@@ -87,7 +87,7 @@ object WeatherUtils {
                 SimpleDateFormat(Constant.FORMAT_TIME_DAILY).format(data * 1000)
             }
             else -> "${context?.getString(R.string.message_update_data)} " +
-                    "${SimpleDateFormat(Constant.FORMAT_TIME_LAST_UPDATED).format(data)}"
+                    "${SimpleDateFormat(Constant.FORMAT_TIME_LAST_UPDATED).format(data * 1000)}"
         }
     }
 

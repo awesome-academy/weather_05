@@ -7,7 +7,6 @@ import com.sunasterisk.weather.data.source.remote.OnFetchDataJsonListener
 class WeatherPresenter(
     private val repository: WeatherRepository
 ) : WeatherContract.Presenter {
-
     private var view: WeatherContract.View? = null
 
     override fun setView(view: WeatherContract.View) {
