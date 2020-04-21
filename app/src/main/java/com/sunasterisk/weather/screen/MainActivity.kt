@@ -12,6 +12,7 @@ import com.sunasterisk.weather.screen.weather.WeatherFragment
 import com.sunasterisk.weather.utils.*
 import com.sunasterisk.weather.utils.listener.OnFetchLocation
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_weather.*
 
 class MainActivity : AppCompatActivity(), OnFetchLocation{
 
@@ -39,7 +40,8 @@ class MainActivity : AppCompatActivity(), OnFetchLocation{
             addFragmentToActivity(
                 supportFragmentManager,
                 WeatherFragment.newInstance(it.latitude, it.longitude),
-                R.id.container)
+                R.id.container
+            )
         }
     }
 
