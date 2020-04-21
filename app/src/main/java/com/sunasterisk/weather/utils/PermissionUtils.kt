@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Criteria
 import android.location.LocationManager
 import android.provider.Settings
 import android.widget.Toast
@@ -39,11 +40,19 @@ object PermissionUtils {
         if (boolean) {
             val locationManager =
                 activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val criteria = Criteria()
+            criteria.accuracy = Criteria.ACCURACY_FINE
+            criteria.powerRequirement = Criteria.POWER_LOW
+            criteria.isAltitudeRequired = false
+            criteria.isBearingRequired = false
+            criteria.isSpeedRequired = false
+            criteria.isCostAllowed = true
+            val provider = locationManager.getBestProvider(criteria, false)
             try {
                 val listener = MyLocationListener(onFetchLocation)
                 var location =
-                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                location?.let { listener.onLocationChanged(location) }
+                    locationManager.getLastKnownLocation(provider)
+                location?.let { listener.onLocationChanged(it) }
             } catch (e: SecurityException) {
                 e.printStackTrace()
             }

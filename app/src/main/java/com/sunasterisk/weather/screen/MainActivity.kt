@@ -2,16 +2,18 @@ package com.sunasterisk.weather.screen
 
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.sunasterisk.weather.R
 import com.sunasterisk.weather.screen.cities.CitiesFragment
 import com.sunasterisk.weather.screen.weather.WeatherFragment
 import com.sunasterisk.weather.utils.*
 import com.sunasterisk.weather.utils.listener.OnFetchLocation
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), OnFetchLocation {
-    private var location: Location? = null
+class MainActivity : AppCompatActivity(), OnFetchLocation{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,16 +23,20 @@ class MainActivity : AppCompatActivity(), OnFetchLocation {
 
     override fun onResume() {
         super.onResume()
-        PermissionUtils.getLastLocation(
-            this,
-            this,
-            PermissionUtils.isLocationEnabled(this))
-        initView()
+        val fragment =
+            supportFragmentManager.findFragmentByTag(WeatherFragment::class.java.simpleName)
+        if (fragment == null) {
+            PermissionUtils.getLastLocation(
+                this,
+                this,
+                PermissionUtils.isLocationEnabled(this)
+            )
+        }
     }
 
-    private fun initView() {
+    private fun initView(location: Location?) {
         location?.let {
-            ActivityUtils.addFragmentToActivity(
+            addFragmentToActivity(
                 supportFragmentManager,
                 WeatherFragment.newInstance(it.latitude, it.longitude),
                 R.id.container)
@@ -42,8 +48,10 @@ class MainActivity : AppCompatActivity(), OnFetchLocation {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        PermissionUtils.onRequestPermissionResult(requestCode,
-            permissions, grantResults, this)
+        PermissionUtils.onRequestPermissionResult(
+            requestCode,
+            permissions, grantResults, this
+        )
     }
 
     override fun onRestart() {
@@ -52,6 +60,6 @@ class MainActivity : AppCompatActivity(), OnFetchLocation {
     }
 
     override fun onDataLocation(location: Location?) {
-        this.location = location
+        initView(location)
     }
 }

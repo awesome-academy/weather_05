@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sunasterisk.weather.data.model.WeatherEntry
 import com.sunasterisk.weather.data.model.entity.WeatherStatistics
-import com.sunasterisk.weather.utils.OnItemRecyclerViewClickListener
 import com.sunasterisk.weather.utils.WeatherUtils
 import kotlinx.android.synthetic.main.layout_item_daily.view.*
 import kotlinx.android.synthetic.main.layout_item_hourly.view.*
@@ -45,7 +44,7 @@ class WeatherAdapter(
         fun bindDataHourly(data: WeatherStatistics) {
             data.time?.let { time ->
                 itemView.textHourlyTime.text =
-                    WeatherUtils.formatTime(time, WeatherEntry.HOURLY_OBJECT)
+                    WeatherUtils.formatTime(itemView.context, time, WeatherEntry.HOURLY_OBJECT)
             }
             temperatureUnit?.let {
                 data.temperature?.let { temperature ->
@@ -54,18 +53,28 @@ class WeatherAdapter(
                             WeatherUtils.temperatureUnit(temperature, it))
                 }
             }
+            data.icon?.let {
+                WeatherUtils.getIcon(it)?.let { image ->
+                    itemView.imageHourlyIcon.setImageResource(image)
+                }
+            }
         }
 
         fun bindDataDaily(data: WeatherStatistics) {
             data.time?.let {
                 itemView.textDailyTime.text =
-                    WeatherUtils.formatTime(it, WeatherEntry.DAILY_OBJECT)
+                    WeatherUtils.formatTime(itemView.context, it, WeatherEntry.DAILY_OBJECT)
             }
             temperatureUnit?.let {
                 if (data.temperatureMin != null && data.temperatureMax != null) {
                     itemView.textDailyMinMaxTemperature.text =  WeatherUtils.formatTemperature(
                         WeatherUtils.temperatureUnit(data.temperatureMin, it),
                         WeatherUtils.temperatureUnit(data.temperatureMax, it))
+                }
+            }
+            data.icon?.let {
+                WeatherUtils.getIcon(it)?.let { image ->
+                    itemView.imageDailyIcon.setImageResource(image)
                 }
             }
         }
