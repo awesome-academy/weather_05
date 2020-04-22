@@ -15,8 +15,10 @@ class CitiesAdapter : RecyclerView.Adapter<CitiesAdapter.ViewHolder>() {
 
     private val weatherList = mutableListOf<Weather>()
     private var onItemClickListener: OnItemRecyclerViewClickListener<Weather>? = null
+    private var temperatureUnit: String? = null
 
-    fun updateData(list: List<Weather>) {
+    fun updateData(list: List<Weather>, unit: String) {
+        temperatureUnit = unit
         weatherList.clear()
         weatherList.addAll(list)
         notifyDataSetChanged()
@@ -52,6 +54,7 @@ class CitiesAdapter : RecyclerView.Adapter<CitiesAdapter.ViewHolder>() {
 
         fun bindData(data: Weather) {
             weather = data
+            val unit = temperatureUnit?: TemperatureUnit.CELSIUS
             itemView.apply {
                 WeatherUtils.apply {
                         weather?.apply {
@@ -61,7 +64,7 @@ class CitiesAdapter : RecyclerView.Adapter<CitiesAdapter.ViewHolder>() {
                         weatherCurrent?.apply {
                             temperature?.let {
                                 textTemperatureLocation.text =
-                                    formatTemperature(temperatureUnit(it, TemperatureUnit.CELSIUS))
+                                    formatTemperature(temperatureUnit(it, unit))
                             }
                             textSummaryLocation.text = summary
                         }

@@ -10,6 +10,7 @@ import com.sunasterisk.weather.utils.listener.OnFetchLocation
 
 
 class MainActivity : AppCompatActivity(), OnFetchLocation{
+    private var location: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +54,11 @@ class MainActivity : AppCompatActivity(), OnFetchLocation{
 
     override fun onRestart() {
         super.onRestart()
-        PermissionUtils.requestPermissions(this)
+        initView(location)
     }
 
     override fun onDataLocation(location: Location?) {
+        this.location = location
         initView(location)
     }
 }

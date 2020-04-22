@@ -126,7 +126,7 @@ class ParseDataWithJson {
                 WeatherEntry.DAILY_OBJECT)
         val hashMap = HashMap<String, Double>()
         val temperatureMin = dailyWeather?.get(0)?.temperatureMin ?: 0.0
-        val temperatureMax = dailyWeather?.get(0)?.temperatureMin ?: 0.0
+        val temperatureMax = dailyWeather?.get(0)?.temperatureMax ?: 0.0
         hashMap.apply {
             put(WeatherStatisticsEntry.TEMPERATURE_MIN, temperatureMin)
             put(WeatherStatisticsEntry.TEMPERATURE_MAX, temperatureMax)

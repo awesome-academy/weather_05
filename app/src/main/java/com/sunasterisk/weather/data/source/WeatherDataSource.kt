@@ -5,7 +5,11 @@ import com.sunasterisk.weather.data.source.remote.OnFetchDataJsonListener
 
 interface WeatherDataSource {
 
-    interface Local
+    interface Local {
+        fun insertWeather(weather: Weather)
+        fun getWeathers(): List<Weather>?
+        fun deleteWeather(id: String)
+    }
 
     interface Remote {
         fun getWeather(

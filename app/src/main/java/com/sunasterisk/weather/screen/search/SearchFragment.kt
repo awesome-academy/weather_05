@@ -8,7 +8,7 @@ import android.view.ViewGroup
 
 import com.sunasterisk.weather.R
 
-class SearchFragment : Fragment() {
+class SearchFragment private constructor() : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -16,5 +16,9 @@ class SearchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search, container, false)
+    }
+
+    companion object {
+        fun newInstance() = SearchFragment()
     }
 }

@@ -23,7 +23,10 @@ class WeatherPresenter(
             object : OnFetchDataJsonListener<Weather> {
                 override fun onSuccess(data: Weather?) {
                     view?.onProgressLoading(false)
-                    data?.let { view?.onGetCurrentWeatherSuccess(it) }
+                    data?.let {
+                        view?.onGetCurrentWeatherSuccess(it)
+                        repository.insertWeather(it)
+                    }
                 }
 
                 override fun onError(e: Exception?) {
@@ -32,6 +35,14 @@ class WeatherPresenter(
                 }
             }
         )
+    }
+
+    override fun getWeatherLocal() {
+        repository.getWeathers()?.let {
+            if (it.isNotEmpty()) {
+                view?.onGetCurrentWeatherSuccess(it[0])
+            }
+        }
     }
 
     override fun onStop() {}

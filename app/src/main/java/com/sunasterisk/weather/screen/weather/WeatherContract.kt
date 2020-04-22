@@ -9,10 +9,12 @@ interface WeatherContract {
     interface View {
         fun onProgressLoading(isLoading: Boolean)
         fun onGetCurrentWeatherSuccess(weather: Weather)
+        fun onInternetConnectionFailed()
         fun onError(exception: Exception)
     }
 
     interface Presenter : BasePresenter<View> {
         fun getWeather(latitude: Double, longitude: Double)
+        fun getWeatherLocal()
     }
 }

@@ -21,6 +21,7 @@ import com.sunasterisk.weather.utils.SpeedUnit.KMH
 import kotlin.math.roundToInt
 import com.sunasterisk.weather.data.model.WeatherEntry
 import com.sunasterisk.weather.utils.SpeedUnit.MS
+import java.lang.Exception
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -115,11 +116,17 @@ object WeatherUtils {
             else -> KMH
         }
 
-    fun formatNameLocation(context: Context?, latitude: Double, longitude: Double): String {
-        Geocoder(context, Locale.ENGLISH)
-            .getFromLocation(latitude, longitude, 1)[0].apply {
-            return StringBuilder(adminArea).toString()
+    fun formatNameLocation(context: Context?, latitude: Double, longitude: Double): String? {
+        var nameLocation: String? = null
+        try {
+            Geocoder(context, Locale.ENGLISH)
+                .getFromLocation(latitude, longitude, 1)[0].apply {
+                nameLocation = StringBuilder(adminArea).toString()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+       return nameLocation
     }
 }
 
