@@ -2,17 +2,12 @@ package com.sunasterisk.weather.screen
 
 import android.location.Location
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.sunasterisk.weather.R
-import com.sunasterisk.weather.screen.cities.CitiesFragment
 import com.sunasterisk.weather.screen.weather.WeatherFragment
 import com.sunasterisk.weather.utils.*
 import com.sunasterisk.weather.utils.listener.OnFetchLocation
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_weather.*
+
 
 class MainActivity : AppCompatActivity(), OnFetchLocation{
 

@@ -17,4 +17,7 @@
     <string name="message_turn_on_location">"Turn on location"</string>
     <string name="message_update_data">Last updated:</string>
     <string name="title_cities_manager">Cities Manager</string>
+    <string name="title_add_city">Add City</string>
+    <string name="celsius_unit">℃</string>
+    <string name="fahrenheit_unit">/ ℉</string>
 </resources>

@@ -220,7 +220,6 @@ class DBHelper(
         private const val TABLE_HOURLY = "Hourly"
         private const val TABLE_DAILY = "Daily"
         private const val COLUMN_ID_WEATHER = "id_weather"
-        private const val COLUMN_ID_DATA = "id_data"
         private const val COLUMN_VALUE = "value"
         // Create table
         private const val SQL_CREATE_TABLE_WEATHER = "CREATE TABLE $TABLE_WEATHER(" +

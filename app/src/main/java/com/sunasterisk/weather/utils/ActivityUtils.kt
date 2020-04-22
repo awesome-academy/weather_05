@@ -41,7 +41,5 @@ fun AppCompatActivity.removeFragmentToActivity(
 
 fun AppCompatActivity.setupToolbar(toolbar: Toolbar, titleToolbar: String) {
     setSupportActionBar(toolbar)
-    supportActionBar?.apply {
-        title = titleToolbar
-    }
+    toolbar.title = titleToolbar
 }
