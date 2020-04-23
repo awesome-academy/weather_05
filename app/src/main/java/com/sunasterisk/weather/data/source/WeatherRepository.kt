@@ -10,20 +10,32 @@ class WeatherRepository private constructor(
     private val remoteDataSource: WeatherRemoteDataSource
 ) : WeatherDataSource.Local, WeatherDataSource.Remote {
 
-    private object HOLDER {
-        val INSTANCE = WeatherRepository(localDataSource = WeatherLocalDataSource.instance,
-                                         remoteDataSource = WeatherRemoteDataSource.instance)
-    }
-
-    companion object {
-        val instance: WeatherRepository by lazy { HOLDER.INSTANCE }
-    }
-
     override fun getWeather(
         latitude: Double,
         longitude: Double,
         listener: OnFetchDataJsonListener<Weather>
     ) {
         remoteDataSource.getWeather(latitude, longitude, listener)
+    }
+
+    override fun insertWeather(weather: Weather) {
+        localDataSource.insertWeather(weather)
+    }
+
+    override fun getWeathers(): List<Weather>? {
+        return localDataSource.getWeathers()
+    }
+
+    override fun deleteWeather(id: String) {
+        localDataSource.deleteWeather(id)
+    }
+
+    companion object {
+        private var INSTANCE: WeatherRepository? = null
+
+        fun getInstance(local: WeatherLocalDataSource,
+                        remote: WeatherRemoteDataSource) = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: WeatherRepository(local, remote).also { INSTANCE = it }
+        }
     }
 }

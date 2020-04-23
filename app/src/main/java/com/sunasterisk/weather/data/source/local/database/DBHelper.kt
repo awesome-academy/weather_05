@@ -62,7 +62,7 @@ class DBHelper(
         val latitude = weather.latitude?: 0.0
         val longitude = weather.longitude?:0.0
         val idWeather =
-            WeatherUtils.formatNameLocation(context, latitude, longitude)
+            WeatherUtils.formatNameLocation(context, latitude, longitude)?: ""
         val cursorWeather = readableDatabase.rawQuery(
             "SELECT * FROM $TABLE_WEATHER WHERE $COLUMN_ID_WEATHER = '$idWeather'",
             null)
@@ -127,7 +127,7 @@ class DBHelper(
                 null,
                 getWeatherElement(TABLE_CURRENT, idWeather) as WeatherStatistics,
                 getWeatherElement(TABLE_HOURLY, idWeather) as List<WeatherStatistics>,
-                getWeatherElement(TABLE_HOURLY, idWeather) as List<WeatherStatistics>
+                getWeatherElement(TABLE_DAILY, idWeather) as List<WeatherStatistics>
                 ))
                 moveToNext()
             }
@@ -240,5 +240,7 @@ class DBHelper(
         private const val SQL_DROP_TABLE_HOURLY = "DROP TABLE IF EXISTS $TABLE_HOURLY"
         private const val SQL_DROP_TABLE_DAILY = "DROP TABLE IF EXISTS $TABLE_DAILY"
         private const val SQL_DROP_TABLE_WEATHER = "DROP TABLE IF EXISTS $TABLE_WEATHER"
+
+        fun getInstance(context: Context?) = DBHelper(context)
     }
 }

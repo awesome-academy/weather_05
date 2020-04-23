@@ -9,6 +9,7 @@ object Constant {
     const val LATITUDE_KEY = "LATITUDE"
     const val LONGITUDE_KEY = "LONGITUDE"
     const val SPEED_UNIT_KEY = "SPEED_UNIT"
+    const val TEMPERATURE_UNIT_KEY = "TEMPERATURE_UNIT_KEY"
     const val TAG_LAST_UPDATE = "UPDATE"
     const val PREF_SPEED_AND_TEMPERATURE_UNIT = "SPEED_AND_TEMPERATURE_UNIT"
     const val FORMAT_PERCENT = "%.0f%%"

@@ -7,7 +7,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Criteria
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.sunasterisk.weather.R
@@ -40,22 +43,16 @@ object PermissionUtils {
         if (boolean) {
             val locationManager =
                 activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            val criteria = Criteria()
-            criteria.accuracy = Criteria.ACCURACY_FINE
-            criteria.powerRequirement = Criteria.POWER_LOW
-            criteria.isAltitudeRequired = false
-            criteria.isBearingRequired = false
-            criteria.isSpeedRequired = false
-            criteria.isCostAllowed = true
-            val provider = locationManager.getBestProvider(criteria, false)
             try {
                 val listener = MyLocationListener(onFetchLocation)
                 var location =
-                    locationManager.getLastKnownLocation(provider)
+                    locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
                 location?.let { listener.onLocationChanged(it) }
             } catch (e: SecurityException) {
                 e.printStackTrace()
             }
+        } else {
+            turnOnLocation(activity)
         }
     }
 
@@ -68,9 +65,7 @@ object PermissionUtils {
         if (requestCode == PERMISSION_LOCATION_ID) {
             if (grantResults.isNotEmpty() &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED
-            ) {
-                if (!isLocationEnabled(activity)) { turnOnLocation(activity) }
-            }
+            ) { }
         }
     }
 
@@ -93,5 +88,12 @@ object PermissionUtils {
             Toast.LENGTH_LONG).show()
         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         activity.startActivity(intent)
+    }
+    
+    fun isNetWorkEnabled(activity: Activity): Boolean {
+        val connectivityManager =
+            activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netWorkInfo = connectivityManager.activeNetworkInfo
+        return netWorkInfo != null && netWorkInfo.isConnectedOrConnecting
     }
 }

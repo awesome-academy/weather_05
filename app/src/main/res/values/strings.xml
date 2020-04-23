@@ -20,4 +20,7 @@
     <string name="title_add_city">Add City</string>
     <string name="celsius_unit">℃</string>
     <string name="fahrenheit_unit">/ ℉</string>
+    <string name="message_network_not_responding">
+        The network is not responding, please check the wifi and mobile network
+    </string>
 </resources>

@@ -15,6 +15,9 @@ import com.sunasterisk.weather.data.model.Weather
 import com.sunasterisk.weather.data.model.WeatherEntry
 import com.sunasterisk.weather.data.model.entity.WeatherStatistics
 import com.sunasterisk.weather.data.source.WeatherRepository
+import com.sunasterisk.weather.data.source.local.WeatherLocalDataSource
+import com.sunasterisk.weather.data.source.local.database.DBHelper
+import com.sunasterisk.weather.data.source.remote.WeatherRemoteDataSource
 import com.sunasterisk.weather.screen.adapter.WeatherAdapter
 import com.sunasterisk.weather.screen.cities.CitiesFragment
 import com.sunasterisk.weather.utils.*
@@ -25,10 +28,6 @@ import kotlinx.android.synthetic.main.layout_header_weather.*
 
 class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
     SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
-
-    private val presenter: WeatherPresenter by lazy {
-        WeatherPresenter(WeatherRepository.instance)
-    }
 
     private val hourlyAdapter: WeatherAdapter by lazy {
         WeatherAdapter(R.layout.layout_item_hourly, WeatherEntry.HOURLY_OBJECT)
@@ -45,10 +44,14 @@ class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
         context?.getSharedPreferences(Constant.PREF_SPEED_AND_TEMPERATURE_UNIT, MODE_PRIVATE)
     }
 
+    private var repository: WeatherRepository? = null
+    private var presenter: WeatherPresenter? = null
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
     private var speedUnit: String? = null
+    private var temperatureUnit: String? = null
     private var speedValue: Double = 0.0
+    private var weatherTemp: Weather? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,13 +80,28 @@ class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
     }
 
     private fun initData() {
-        presenter.setView(this)
+        repository = context?.let {
+            WeatherRepository.getInstance(
+                WeatherLocalDataSource.getInstance(it),
+                WeatherRemoteDataSource.instance
+            )
+        }
+        presenter = repository?.let { WeatherPresenter(it) }
+        presenter?.setView(this)
+        speedUnit = sharedPreferences?.getString(Constant.SPEED_UNIT_KEY, SpeedUnit.MS)
+        temperatureUnit =
+            sharedPreferences?.getString(Constant.TEMPERATURE_UNIT_KEY, TemperatureUnit.CELSIUS)
         arguments?.let {
             latitude = it.getDouble(Constant.LATITUDE_KEY)
             longitude = it.getDouble(Constant.LONGITUDE_KEY)
-            presenter.getWeather(latitude, longitude)
+            activity?.let { activity ->
+                if (PermissionUtils.isNetWorkEnabled(activity)) {
+                    presenter?.getWeather(latitude, longitude)
+                } else {
+                    onInternetConnectionFailed()
+                }
+            }
         }
-        speedUnit = sharedPreferences?.getString(Constant.SPEED_UNIT_KEY, SpeedUnit.MS)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -113,15 +131,18 @@ class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
     }
 
     override fun onGetCurrentWeatherSuccess(weather: Weather) {
+        weatherTemp = weather
+        temperatureUnit =
+            sharedPreferences?.getString(Constant.TEMPERATURE_UNIT_KEY, TemperatureUnit.CELSIUS)
+        temperatureUnit?.let {
+            bindDataToView(weather, it)
+        }
+    }
+
+    private fun bindDataToView(weather: Weather, unit: String) {
         progressBarHumidity.max = 100
         textLocation.text = WeatherUtils.formatNameLocation(context, latitude, longitude)
         weather.apply {
-            weatherHourlyList?.let {
-                hourlyAdapter.updateData(it as MutableList<WeatherStatistics>, TemperatureUnit.CELSIUS)
-            }
-            weatherDailyList?.let {
-                dailyAdapter.updateData(it as MutableList<WeatherStatistics>, TemperatureUnit.CELSIUS)
-            }
             weatherCurrent?.let {
                 it.time?.let { time ->
                     textTimeUpdate.text =
@@ -129,27 +150,34 @@ class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
                 }
                 textSummary.text = it.summary
                 textTemperature.text = WeatherUtils.formatTemperature(
-                    getTemperature(it.temperature, TemperatureUnit.CELSIUS))
+                    getTemperature(it.temperature, unit))
                 textMinMaxTemperature.text = WeatherUtils.formatTemperature(
-                    getTemperature(it.temperatureMin, TemperatureUnit.CELSIUS),
-                    getTemperature(it.temperatureMax, TemperatureUnit.CELSIUS))
+                    getTemperature(it.temperatureMin, unit),
+                    getTemperature(it.temperatureMax, unit))
                 it.wind?.let { wind ->
+                    val unit = speedUnit?: SpeedUnit.MS
                     textWindDirectionValue.text = wind.windDirection?.let { windDirection ->
                         WeatherUtils.formatWindDirection(windDirection)
                     }
                     textWindSpeedValue.text = wind.windSpeed?.let { windSpeed ->
                         speedValue = windSpeed
-                        speedUnit?.let { unit ->
-                            speedUnit = WeatherUtils.changeSpeedUnit(unit)
-                            WeatherUtils.formatWindSpeed(windSpeed, unit)
-                        }
+                        WeatherUtils.formatWindSpeed(windSpeed, unit)
                     }
+                    textWindSpeedUnit.text =
+                        StringBuilder(" - ").append(WeatherUtils.changeSpeedUnit(unit))
                 }
-                textWindSpeedUnit.text = StringBuilder(" - ").append(speedUnit)
                 it.humidity?.let { humidity ->
                     progressBarHumidity.progress = humidity.times(100).roundToInt()
                     textPercentHumidity.text = WeatherUtils.formatHumidity(humidity)
                 }
+            }
+            weatherHourlyList?.let {
+                hourlyAdapter.updateData(
+                    it as MutableList<WeatherStatistics>, unit)
+            }
+            weatherDailyList?.let {
+                dailyAdapter.updateData(
+                    it as MutableList<WeatherStatistics>, unit)
             }
         }
     }
@@ -161,12 +189,24 @@ class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
         return 0
     }
 
+    override fun onInternetConnectionFailed() {
+        Toast.makeText(context, getString(R.string.message_network_not_responding),
+            Toast.LENGTH_SHORT).show()
+        presenter?.getWeatherLocal()
+    }
+
     override fun onError(exception: Exception) {
         Toast.makeText(context, exception.message.toString(), Toast.LENGTH_LONG).show()
     }
 
     override fun onRefresh() {
-        presenter.getWeather(latitude, longitude)
+        activity?.let {
+            if (PermissionUtils.isNetWorkEnabled(it)) {
+                presenter?.getWeather(latitude, longitude)
+            } else {
+                presenter?.getWeatherLocal()
+            }
+        }
         swipeRefreshWeather.isRefreshing = false
     }
 
@@ -177,6 +217,11 @@ class WeatherFragment private constructor() : Fragment(), WeatherContract.View,
                 WeatherUtils.formatWindSpeed(speedValue, WeatherUtils.changeSpeedUnit(it))
             textWindSpeedUnit.text = StringBuilder(" - ").append(it)
         }
+        sharedPreferences?.edit()?.putString(Constant.SPEED_UNIT_KEY, speedUnit)?.apply()
+    }
+
+    override fun onPause() {
+        super.onPause()
         sharedPreferences?.edit()?.putString(Constant.SPEED_UNIT_KEY, speedUnit)?.apply()
     }
 

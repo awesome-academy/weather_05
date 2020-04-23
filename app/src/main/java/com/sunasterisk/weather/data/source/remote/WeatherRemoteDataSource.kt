@@ -11,10 +11,6 @@ class WeatherRemoteDataSource private constructor(): WeatherDataSource.Remote {
         val INSTANCE = WeatherRemoteDataSource()
     }
 
-    companion object {
-        val instance: WeatherRemoteDataSource by lazy { HOLDER.INSTANCE }
-    }
-
     override fun getWeather(
         latitude: Double,
         longitude: Double,
@@ -26,5 +22,9 @@ class WeatherRemoteDataSource private constructor(): WeatherDataSource.Remote {
                         + Constant.COMMA
                         + longitude)
         GetJsonFromUrl(listener).execute(url)
+    }
+
+    companion object {
+        val instance: WeatherRemoteDataSource by lazy { HOLDER.INSTANCE }
     }
 }
